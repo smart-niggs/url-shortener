@@ -1,8 +1,9 @@
 # **API Url Shortener Service**.
 
 ### Check out the API with the following Urls:
+-  #### [Deployed API URL](https://url-api-shortner.herokuapp.com/):
 -  #### [Postman Doc](https://documenter.getpostman.com/view/3166095/TWDamv1K):
-- #### [Swagger Doc]():
+- #### [Swagger Doc](https://url-api-shortner.herokuapp.com/docs):
 <br />
 
 ### Description
