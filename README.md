@@ -1,4 +1,4 @@
-# **API Url Shortener Service**.
+# **Url Shortener API**.
 
 ### Check out the API by clicking the following links:
 -  #### [Deployed API URL](https://url-api-shortner.herokuapp.com/)
