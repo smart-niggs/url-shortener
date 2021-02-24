@@ -7,6 +7,9 @@
 <br />
 
 ### Description
+- This API takes in a lengthy url and outputs a short human friendly url.
+- All shortend urls are publicly accessible and will automatically redirect you to the lengthy url.
+- NB: Redirection may not happen in your browser, make a GET request with the shortened url on postman or similar tools and the redirection will occur.
 -  Built using [Nest](https://github.com/nestjs/nest) framework.
 
 <br />
