@@ -2,14 +2,12 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+/**
+ * Config is read and validated at module load, so a missing variable throws a
+ * named error on boot rather than surfacing as a connection failure later.
+ */
 class ConfigService {
-
-  constructor(private env: { [k: string]: string | undefined }) { }
-
-  private mode = this.getValue('NODE_ENV', true);
-  public isDev: boolean = this.mode === 'development';
-  public isProduction: boolean = this.mode === 'production';
-
+  constructor(private env: { [k: string]: string | undefined }) {}
 
   private getValue(key: string, throwOnMissing = true): string {
     const value = this.env[key];
@@ -20,35 +18,29 @@ class ConfigService {
   }
 
   public ensureValues(keys: string[]) {
-    keys.forEach(k => this.getValue(k, true));
+    keys.forEach((k) => this.getValue(k, true));
     return this;
   }
 
-  public getAppName(): string {
-    return this.getValue('APP_NAME', true);
+  public getPort(): string {
+    return this.getValue('PORT');
   }
 
-  public getAppVersionNo() : string {
-    return this.getValue('VERSION_NO', true);
+  public getMongoDbUrl(): string {
+    return this.getValue('MONGO_DB_URL');
   }
 
-  public getPort() {
-    return this.getValue('PORT', true);
-  }
-
-  public getMongoDbUrl() {
-    return this.getValue('MONGO_DB_URL', true);
-  }
-
-  public getBaseUrl() {
-    return this.getValue('BASE_URL', true);
+  /** Trailing slashes stripped so callers can safely append `/<code>`. */
+  public getBaseUrl(): string {
+    return this.getValue('BASE_URL').replace(/\/+$/, '');
   }
 }
 
-const configService = new ConfigService(process.env)
-  .ensureValues([
-    'MONGO_DB_URL',
-    'BASE_URL'
-  ]);
+const configService = new ConfigService(process.env).ensureValues([
+  'NODE_ENV',
+  'PORT',
+  'MONGO_DB_URL',
+  'BASE_URL',
+]);
 
 export { configService };

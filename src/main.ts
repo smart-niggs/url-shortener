@@ -1,32 +1,20 @@
-import { NestFactory } from '@nestjs/core';
-import { SwaggerModule } from '@nestjs/swagger';
-import { swaggerOptions } from './common/config/swagger.config';
-import { AppModule } from './app.module';
-import { AllExceptionsFilter } from './common/exception/http-exception.filter';
-import { TransformInterceptor } from './common/interceptor/transform.interceptor';
-import { configService } from './common/config/config.service';
 import { ValidationPipe } from '@nestjs/common';
-
-const port = configService.getPort();
-const prefix = '/api';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { configService } from './common/config/config.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn', 'debug', 'verbose'],
-  });
-  app.useGlobalFilters(new AllExceptionsFilter());
-  app.useGlobalInterceptors(new TransformInterceptor());
-  app.useGlobalPipes(new ValidationPipe({
-    transform: true
-  }));
+  const app = await NestFactory.create(AppModule);
 
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
-  // Swagger docs configuration
-  const document = SwaggerModule.createDocument(app, swaggerOptions);
-  SwaggerModule.setup('/docs', app, document);
+  // ECS sends SIGTERM, then SIGKILL after stopTimeout (30s default). This lets
+  // Nest close the server and the Mongo connection inside that window, so a
+  // deploy does not cut off in-flight requests.
+  app.enableShutdownHooks();
 
-  await app.listen(port, () => {
-    console.log(`App listening on port: ${port}`);
-  });
+  // 0.0.0.0, not localhost: inside a container 127.0.0.1 is the container
+  // itself, so a loopback bind is unreachable from the host or a load balancer.
+  await app.listen(configService.getPort(), '0.0.0.0');
 }
 bootstrap();

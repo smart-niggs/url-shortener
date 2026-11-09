@@ -1,19 +1,16 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
+    "target": "ES2023",
+    "moduleResolution": "node",
+    "outDir": "./dist",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
+    "esModuleInterop": true,
+    "removeComments": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "sourceMap": true
   },
-  // "include": ["src/**/*", "src/modules/user/.module.ts"]
-  // "include": ["src/**/*"]
+  "include": ["src"]
 }
